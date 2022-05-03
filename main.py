@@ -5,6 +5,7 @@ mint = (0,255,205)
 pink = (242,0,210)
 brown = (192,135,49)
 white = (255,255,255)
+black = (0,0,0)
 
 #Sets the size of the blocks
 block_width = 23
@@ -13,7 +14,7 @@ block_height = 15
 #This class represents the blocks in the game
 class Block(pygame.sprite.Sprite):
 
-#Takes in color and the x and y position
+#Constructor, takes in color and the x and y position
     def __init__(self,color,x,y):
         super().__init__()
         self.image = pygame.Surface([block_width,block_height])
@@ -42,6 +43,23 @@ class Ball(pygame.sprite.Sprite):
         self.screenh = pygame.display.get_surface().get_height()
         self.screenw = pygame.display.get_surface().get_width()
 
+#Class of the player platform   
+class Platform(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        #Properties of platform
+        self.width = 70
+        self.height = 15
+        self.image = pygame.Surface([self.width, self.height])
+        #Color of platform
+        self.image.fill(black)
+        #Sets position where ball comes from
+        self.rect = self.image.get_rect()
+        self.screenh = pygame.display.get_surface().get_height()
+        self.screenw = pygame.display.get_surface().get_width()
+        self.rect.x = 0
+        self.rect.y = self.screenh-self.height
+
 pygame.init()
 
 #Sets size of the game window
@@ -57,6 +75,10 @@ bg = pygame.Surface(screen.get_size())
 balls = pygame.sprite.Group()
 blocks = pygame.sprite.Group()
 sprites = pygame.sprite.Group()
+
+#Creates ball
+platform = Platform()
+sprites.add(platform)
 
 #Creates the ball sprite
 ball = Ball()
@@ -80,7 +102,7 @@ for row in range(5):
 running = True
 while running:
     #Color of the background
-    screen.fill(white)
+    screen.fill(mint)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
