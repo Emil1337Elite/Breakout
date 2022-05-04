@@ -25,6 +25,7 @@ class Block(pygame.sprite.Sprite):
 
 #Ball class
 class Ball(pygame.sprite.Sprite):
+
     #Properties of the ball
     speed = 8.0
     x = 0.0
@@ -45,12 +46,14 @@ class Ball(pygame.sprite.Sprite):
 
 #Class of the player platform   
 class Platform(pygame.sprite.Sprite):
+
     def __init__(self):
         super().__init__()
         #Properties of platform
         self.width = 70
         self.height = 15
         self.image = pygame.Surface([self.width, self.height])
+        self.speed = 10
         #Color of platform
         self.image.fill(black)
         #Sets position where ball comes from
@@ -59,6 +62,16 @@ class Platform(pygame.sprite.Sprite):
         self.screenw = pygame.display.get_surface().get_width()
         self.rect.x = 0
         self.rect.y = self.screenh-self.height
+
+    def movement(self):
+        self.direction = 0
+        key = pygame.key.get_pressed()
+        if key[pygame.K_LEFT] and self.rect.left > 0:
+            self.rect.x -= self.speed
+            self.direction = -1
+        if key[pygame.K_RIGHT] and self.rect.right < self.screenw:
+            self.rect.x += self.speed
+            self.direction = -1
 
 pygame.init()
 
