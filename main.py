@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 #Define colors of blocks
 mint = (0,255,205)
@@ -27,22 +28,30 @@ class Block(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
 
     #Properties of the ball
-    speed = 8.0
-    x = 0.0
-    y = 180.0
-    direction = 160
-    width = 10
-    height = 10
+    # speed = 8.0
+    # x = 0.0
+    # y = 180.0
+    # direction = 160
+    # width = 10
+    # height = 10
 
-    def __init__(self):
+    def __init__(self,color,width,height):
         super().__init__()
-        self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.Surface([width, height])
         #Colors in the ball
         self.image.fill(pink)
+        self.image.set_colorkey(black)
+        pygame.draw.rect(self.image, color, [0, 0, width, height])
+        self.velocity = (randint(4,8),randint(-8,8))
         self.rect = self.image.get_rect()
-        #Gets the width and height of the screen
-        self.screenh = pygame.display.get_surface().get_height()
-        self.screenw = pygame.display.get_surface().get_width()
+    
+    def move(self):
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
+
+    def bounce(self):
+        self.velocity[0] = -self.velocity[0]
+        self.velocity[1] = randint(-8,8)
 
 #Class of the player platform   
 class Platform(pygame.sprite.Sprite):
@@ -50,8 +59,8 @@ class Platform(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         #Properties of platform
-        self.width = 70
         self.height = 15
+        self.width = 70  
         self.image = pygame.Surface([self.width, self.height])
         self.speed = 10
         #Color of platform
@@ -64,14 +73,10 @@ class Platform(pygame.sprite.Sprite):
         self.rect.y = self.screenh-self.height
 
     def movement(self):
-        self.direction = 0
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT] and self.rect.left > 0:
-            self.rect.x -= self.speed
-            self.direction = -1
-        if key[pygame.K_RIGHT] and self.rect.right < self.screenw:
-            self.rect.x += self.speed
-            self.direction = -1
+        pos = pygame.mouse.get_pos()
+        self.rect.x = pos[0]
+        if self.rect.x > self.screenw - self.width:
+            self.rect.x = self.screenw - self.width
 
 pygame.init()
 
@@ -85,18 +90,18 @@ pygame.display.set_caption('Breakout!')
 bg = pygame.Surface(screen.get_size())
 
 #Sprite lists
-balls = pygame.sprite.Group()
 blocks = pygame.sprite.Group()
-sprites = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
 
-#Creates ball
+#Creates platform
 platform = Platform()
-sprites.add(platform)
+all_sprites.add(platform)
 
 #Creates the ball sprite
-ball = Ball()
-sprites.add(ball)
-balls.add(ball)
+ball = Ball(pink,10,10)
+ball.rect.x = 345
+ball.rect.y = 195
+all_sprites.add(ball)
 
 top = 80
 blocknumber = 32
@@ -108,7 +113,7 @@ for row in range(5):
         #Creates the blocks
         block = Block(brown, column * (block_width + 2) + 1, top)
         blocks.add(block)
-        sprites.add(block)
+        all_sprites.add(block)
     top += block_height + 2
 
 #Temporary quit
@@ -116,10 +121,30 @@ running = True
 while running:
     #Color of the background
     screen.fill(mint)
+
+    all_sprites.update()
+
+    platform.movement()
+
+    if ball.rect.x>=790:
+        ball.velocity[0] = -ball.velocity[0]
+    if ball.rect.x<=0:
+        ball.velocity[0] = -ball.velocity[0]
+    if ball.rect.y>590:
+        ball.velocity[1] = -ball.velocity[1]
+    if ball.rect.y<40:
+        ball.velocity[1] = -ball.velocity[1]
+    
+#Detect collisions between the ball platform
+    if pygame.sprite.collide_mask(ball, platform):
+      ball.rect.x -= ball.velocity[0]
+      ball.rect.y -= ball.velocity[1]
+      ball.bounce()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    sprites.draw(screen)
+    all_sprites.draw(screen)
     pygame.display.flip()
 #Ends the program
 pygame.quit()
