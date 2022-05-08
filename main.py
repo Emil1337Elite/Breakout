@@ -1,6 +1,6 @@
 import pygame
 from random import randint
-
+s
 #Define colors of blocks
 mint = (0,255,205)
 pink = (242,0,210)
