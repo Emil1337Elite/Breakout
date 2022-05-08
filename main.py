@@ -42,7 +42,7 @@ class Ball(pygame.sprite.Sprite):
         self.image.fill(pink)
         self.image.set_colorkey(black)
         pygame.draw.rect(self.image, color, [0, 0, width, height])
-        self.velocity = (randint(4,8),randint(-8,8))
+        self.velocity = [randint(4,8),randint(-8,8)]
         self.rect = self.image.get_rect()
     
     def move(self):
@@ -89,8 +89,7 @@ pygame.display.set_caption('Breakout!')
 #Creates background
 bg = pygame.Surface(screen.get_size())
 
-#Sprite lists
-blocks = pygame.sprite.Group()
+#Sprite list
 all_sprites = pygame.sprite.Group()
 
 #Creates platform
@@ -112,19 +111,24 @@ for row in range(5):
     for column in range(0,blocknumber):
         #Creates the blocks
         block = Block(brown, column * (block_width + 2) + 1, top)
-        blocks.add(block)
         all_sprites.add(block)
     top += block_height + 2
 
-#Temporary quit
-running = True
-while running:
+#Loop will keep going until stopped by user
+run = True
+
+#Used to control the fps
+fps = pygame.time.Clock()
+
+#Main loop
+while run:
     #Color of the background
     screen.fill(mint)
 
     all_sprites.update()
 
     platform.movement()
+    ball.move()
 
     if ball.rect.x>=790:
         ball.velocity[0] = -ball.velocity[0]
@@ -135,7 +139,7 @@ while running:
     if ball.rect.y<40:
         ball.velocity[1] = -ball.velocity[1]
     
-#Detect collisions between the ball platform
+#Detect collisions between the ball and the platform
     if pygame.sprite.collide_mask(ball, platform):
       ball.rect.x -= ball.velocity[0]
       ball.rect.y -= ball.velocity[1]
@@ -143,8 +147,12 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            run = False
+    
     all_sprites.draw(screen)
+    
     pygame.display.flip()
+
+    fps.tick(60)
 #Ends the program
 pygame.quit()
