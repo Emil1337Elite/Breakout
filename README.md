@@ -22,10 +22,10 @@ Markdown
 - [x] Add block sprite
 - [x] Add platform sprite
 - [ ] Add collision
-- [ ] Add movement of ball and platform
-- [ ] Add controls for platform
+- [x] Add movement of ball and platform
+- [x] Add controls for platform
 - [ ] Add win state
-- [ ] Add Game Over
+- [x] Add Game Over
 - [ ] To add if i have time
     - [ ] Add score counter
     - [ ] Add high score table

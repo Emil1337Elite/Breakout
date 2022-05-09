@@ -1,12 +1,16 @@
 import pygame
 from random import randint
-s
+
 #Define colors of blocks
 mint = (0,255,205)
 pink = (242,0,210)
 brown = (192,135,49)
 white = (255,255,255)
 black = (0,0,0)
+blue = (0,0,204)
+
+score = 0
+life = 1
 
 #Sets the size of the blocks
 block_width = 23
@@ -27,20 +31,11 @@ class Block(pygame.sprite.Sprite):
 #Ball class
 class Ball(pygame.sprite.Sprite):
 
-    #Properties of the ball
-    # speed = 8.0
-    # x = 0.0
-    # y = 180.0
-    # direction = 160
-    # width = 10
-    # height = 10
-
     def __init__(self,color,width,height):
         super().__init__()
         self.image = pygame.Surface([width, height])
         #Colors in the ball
         self.image.fill(pink)
-        self.image.set_colorkey(black)
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.velocity = [randint(4,8),randint(-8,8)]
         self.rect = self.image.get_rect()
@@ -114,6 +109,8 @@ for row in range(5):
         all_sprites.add(block)
     top += block_height + 2
 
+game_over = False
+
 #Loop will keep going until stopped by user
 run = True
 
@@ -136,6 +133,16 @@ while run:
         ball.velocity[0] = -ball.velocity[0]
     if ball.rect.y>590:
         ball.velocity[1] = -ball.velocity[1]
+        life -= 1
+        if life == 0:
+            font = pygame.font.Font(None, 80)
+            text = font.render("Game Over!", 1, white)
+            screen.blit(text, (250,300))
+            pygame.display.flip()
+            pygame.time.wait(3500)
+
+            run = False
+
     if ball.rect.y<40:
         ball.velocity[1] = -ball.velocity[1]
     
@@ -149,6 +156,14 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     
+    screen.fill(blue)
+    pygame.draw.line(screen, white, [0, 38], [800, 38], 2)
+
+    font = pygame.font.Font(None, 34)
+    text = font.render("Score: " + str(score), 1, white)
+    screen.blit(text, (20,10))
+
+
     all_sprites.draw(screen)
     
     pygame.display.flip()
