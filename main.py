@@ -1,10 +1,8 @@
 import pygame
 from random import randint
 
-#Define colors of blocks
-mint = (0,255,205)
-pink = (242,0,210)
-brown = (192,135,49)
+#Define colors to be used
+orange = (255,128,0)
 white = (255,255,255)
 black = (0,0,0)
 blue = (0,0,204)
@@ -35,7 +33,7 @@ class Ball(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface([width, height])
         #Colors in the ball
-        self.image.fill(pink)
+        self.image.fill(white)
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.velocity = [randint(4,8),randint(-8,8)]
         self.rect = self.image.get_rect()
@@ -81,18 +79,21 @@ screen = pygame.display.set_mode([800, 600])
 #Sets name of the game window
 pygame.display.set_caption('Breakout!')
 
+pygame.mouse.set_visible(0)
+
 #Creates background
 bg = pygame.Surface(screen.get_size())
 
 #Sprite list
 all_sprites = pygame.sprite.Group()
+blocks = pygame.sprite.Group()
 
 #Creates platform
 platform = Platform()
 all_sprites.add(platform)
 
 #Creates the ball sprite
-ball = Ball(pink,10,10)
+ball = Ball(white,10,10)
 ball.rect.x = 345
 ball.rect.y = 195
 all_sprites.add(ball)
@@ -105,7 +106,8 @@ for row in range(5):
     #Creates block columns
     for column in range(0,blocknumber):
         #Creates the blocks
-        block = Block(brown, column * (block_width + 2) + 1, top)
+        block = Block(orange, column * (block_width + 2) + 1, top)
+        blocks.add(block)
         all_sprites.add(block)
     top += block_height + 2
 
@@ -120,7 +122,7 @@ fps = pygame.time.Clock()
 #Main loop
 while run:
     #Color of the background
-    screen.fill(mint)
+    screen.fill(blue)
 
     all_sprites.update()
 
@@ -137,7 +139,7 @@ while run:
         if life == 0:
             font = pygame.font.Font(None, 80)
             text = font.render("Game Over!", 1, white)
-            screen.blit(text, (250,300))
+            screen.blit(text, (245,300))
             pygame.display.flip()
             pygame.time.wait(3500)
 
@@ -151,6 +153,20 @@ while run:
       ball.rect.x -= ball.velocity[0]
       ball.rect.y -= ball.velocity[1]
       ball.bounce()
+
+    kill_block = pygame.sprite.spritecollide(ball, blocks, True)
+
+    if len(kill_block) > 0:
+        ball.bounce()
+        score += 1
+        if len(blocks) == 0:
+            font = pygame.font.Font(None, 80)
+            text = font.render("You win!", 1, white)
+            screen.blit(text, (250,300))
+            pygame.display.flip()
+            pygame.time.wait(3500)
+
+            run = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -168,6 +184,6 @@ while run:
     
     pygame.display.flip()
 
-    fps.tick(60)
+    fps.tick(40)
 #Ends the program
 pygame.quit()

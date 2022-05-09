@@ -21,13 +21,13 @@ Markdown
 - [x] Add ball sprite
 - [x] Add block sprite
 - [x] Add platform sprite
-- [ ] Add collision
+- [x] Add collision
 - [x] Add movement of ball and platform
 - [x] Add controls for platform
-- [ ] Add win state
+- [x] Add win state
 - [x] Add Game Over
 - [ ] To add if i have time
-    - [ ] Add score counter
+    - [x] Add score counter
     - [ ] Add high score table
     - [ ] Add start screen
     - [ ] Add multi-colored blocks
