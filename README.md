@@ -2,7 +2,7 @@
 
 ## Description
 
-Description
+This project is written in Python and the purpose is to recreate the classic arcade game Breakout.
 
 ## Built with
 

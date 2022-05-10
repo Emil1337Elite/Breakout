@@ -53,7 +53,7 @@ class Platform(pygame.sprite.Sprite):
         super().__init__()
         #Properties of platform
         self.height = 15
-        self.width = 70  
+        self.width = 100  
         self.image = pygame.Surface([self.width, self.height])
         self.speed = 10
         #Color of platform
@@ -111,13 +111,14 @@ for row in range(5):
         all_sprites.add(block)
     top += block_height + 2
 
-game_over = False
-
 #Loop will keep going until stopped by user
 run = True
 
 #Used to control the fps
 fps = pygame.time.Clock()
+
+with open("highscore.txt", "r") as f:
+    highscore = int(f.readline().strip())
 
 #Main loop
 while run:
@@ -168,22 +169,30 @@ while run:
 
             run = False
 
+
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if score >= highscore:
+            with open("highscore.txt", "w") as f:
+                f.write(str(score))
+                
+        if event.type == pygame.QUIT:    
+
             run = False
     
     screen.fill(blue)
     pygame.draw.line(screen, white, [0, 38], [800, 38], 2)
 
+
     font = pygame.font.Font(None, 34)
     text = font.render("Score: " + str(score), 1, white)
     screen.blit(text, (20,10))
-
+    text = font.render("High Score: " + str(highscore), 1, white)
+    screen.blit(text, (500, 10))
 
     all_sprites.draw(screen)
     
     pygame.display.flip()
 
-    fps.tick(40)
+    fps.tick(60)
 #Ends the program
 pygame.quit()
