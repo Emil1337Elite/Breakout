@@ -28,9 +28,10 @@ Markdown
 - [x] Add Game Over
 - [ ] To add if i have time
     - [x] Add score counter
-    - [ ] Add high score table
+    - [x] Add high score table
     - [ ] Add start screen
     - [ ] Add multi-colored blocks
+    - [ ] Add diffrent types of bounce
 
 ## Changelog
 
@@ -40,7 +41,7 @@ Markdown
 
 Sprites for ball, blocks and player controlled platform.
 
-#### Removed
+***
 
 ## Contribution
 

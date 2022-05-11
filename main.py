@@ -35,7 +35,7 @@ class Ball(pygame.sprite.Sprite):
         #Colors in the ball
         self.image.fill(white)
         pygame.draw.rect(self.image, color, [0, 0, width, height])
-        self.velocity = [randint(4,8),randint(-8,8)]
+        self.velocity = [randint(4,8),randint(1,8)]
         self.rect = self.image.get_rect()
     
     def move(self):
@@ -44,7 +44,7 @@ class Ball(pygame.sprite.Sprite):
 
     def bounce(self):
         self.velocity[0] = -self.velocity[0]
-        self.velocity[1] = randint(-8,8)
+        self.velocity[1] = - self.velocity[1] + randint(-4,4)
 
 #Class of the player platform   
 class Platform(pygame.sprite.Sprite):
@@ -154,6 +154,7 @@ while run:
       ball.rect.x -= ball.velocity[0]
       ball.rect.y -= ball.velocity[1]
       ball.bounce()
+
 
     kill_block = pygame.sprite.spritecollide(ball, blocks, True)
 
